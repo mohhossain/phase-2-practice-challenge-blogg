@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Header() {
+function Header({ onChange }) {
   return (
     <div>
       <header className="logo">
@@ -8,6 +8,7 @@ function Header() {
 
         {/* This is the search box */}
         <input
+          onChange={onChange}
           style={{
             width: "500px",
             height: "20px",

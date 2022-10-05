@@ -8,11 +8,18 @@ import { useEffect, useState } from "react";
 function App() {
   const [isFormButtonClicked, setIsFormButtonClicked] = useState(false);
   const [blogPosts, setBlogPosts] = useState([]);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     fetch("http://localhost:3000/blogs")
       .then((res) => res.json())
       .then((blogposts) => setBlogPosts(blogposts));
   }, []);
+
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  console.log(search);
 
   const addNewPost = (newPost) => {
     setBlogPosts([...blogPosts, newPost]);
@@ -21,9 +28,17 @@ function App() {
   const handleClick = () => {
     setIsFormButtonClicked(!isFormButtonClicked);
   };
+
+  const filteredPosts = blogPosts.filter((post) => {
+    return (
+      post.title.toLowerCase().includes(search.toLowerCase()) ||
+      post.author.toLowerCase().includes(search.toLowerCase()) ||
+      post.article.toLowerCase().includes(search.toLowerCase())
+    );
+  });
   return (
     <div className="App">
-      <Header></Header>
+      <Header onChange={onSearchChange}></Header>
 
       <button onClick={handleClick} className="show-form">
         Show Form
@@ -32,7 +47,7 @@ function App() {
         <NewPostForm addNewPost={addNewPost}></NewPostForm>
       ) : null}
 
-      <BlogPostContainer blogPosts={blogPosts}></BlogPostContainer>
+      <BlogPostContainer blogPosts={filteredPosts}></BlogPostContainer>
     </div>
   );
 }
